@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -26,7 +27,8 @@ public class CircleImageView extends ImageView {
     private int mWidth,mHeight;
     private Paint mPaint;
     private Bitmap bitmap;
-    private float cx,cy,radius;
+    private float cx,cy;
+    private float radius = -1;
 
     public CircleImageView(Context context){
         super(context);
@@ -40,10 +42,13 @@ public class CircleImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec){
         super.onMeasure(widthMeasureSpec,heightMeasureSpec);
-        mWidth = getMeasuredWidth();
-        mHeight = getMeasuredHeight();
+        if(radius == -1){
+            mWidth = getMeasuredWidth();
+            mHeight = getMeasuredHeight();
 
-        radius = Math.min(mWidth,mHeight);
+            radius = Math.min(mWidth,mHeight);
+        }
+        Log.d(TAG,"radius is :"+radius);
         // 得到最适合圆角图片的正方形
         setMeasuredDimension((int)radius,(int)radius);
     }
@@ -75,6 +80,19 @@ public class CircleImageView extends ImageView {
     public void onDraw(Canvas canvas){
 
         canvas.drawCircle(cx,cy,radius,mPaint);
+    }
+
+    /**
+     * 这两个方法是为了提供属性动画的 getter 和 setter 方法
+     * @return
+     */
+    /*public float getRadius(){
+        return radius;
+    }*/
+
+    public void setRadius(float radius){
+        this.radius = radius;
+        requestLayout();
     }
 
 }
